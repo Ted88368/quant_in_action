@@ -7,3 +7,4 @@
 
 #### 项目
 + [startquant](https://github.com/Ted88368/startquant.git)
++ [《量化开源课程》](https://github.com/Ted88368/whale-quant.git)

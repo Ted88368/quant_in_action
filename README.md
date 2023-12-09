@@ -9,7 +9,10 @@ conda activate py39
 pip install -r requirements.txt
 ```
 
-
+#### 工具库
++ 数据源
+  + baostock 
+  + TuShare
 
 #### 资料
 + 《基本面量化投资：运用财务分析和量化策略获取超额收益》

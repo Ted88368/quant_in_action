@@ -19,5 +19,11 @@ pip install -r requirements.txt
 + 《基本面量化投资：运用财务分析和量化策略获取超额收益》
 + 《中低频量化交易策略研发》
   
-#### 项目
+#### 参考项目
 + [startquant](https://github.com/Ted88368/startquant.git)  
+
+
+#### 量化核心
++ 多因子选股
++ 择时
++ 投资组合

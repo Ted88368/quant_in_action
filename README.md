@@ -15,8 +15,9 @@ pip install -r requirements.txt
   + TuShare
 
 #### 资料
++ [《量化开源课程》](https://github.com/Ted88368/whale-quant.git) 本项目为量化开源课程，可以帮助人们快速掌握量化金融知识以及使用Python进行量化开发的能力。
 + 《基本面量化投资：运用财务分析和量化策略获取超额收益》
-
++ 《中低频量化交易策略研发》
+  
 #### 项目
-+ [startquant](https://github.com/Ted88368/startquant.git)
-+ [《量化开源课程》](https://github.com/Ted88368/whale-quant.git)
++ [startquant](https://github.com/Ted88368/startquant.git)  

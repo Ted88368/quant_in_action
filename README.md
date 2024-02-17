@@ -1,19 +1,31 @@
 # quant_in_action
 
-
-
+### quant_in_action
 #### 运行
 ```shell
 conda create -n py39 python=3.9
 conda activate py39
 pip install -r requirements.txt
 ```
-
 #### 工具库
 + 数据源
-  + baostock 
-  + TuShare
-
-#### 参考资料
-+ [《基本面量化选股——Fscore初筛》](https://zhuanlan.zhihu.com/p/542139256)
-+ [《python使用tushare获取数据,简单计算F-score因子》](https://blog.csdn.net/weixin_47599561/article/details/122976301)
+  + baostock
+  + TuShare
+ 
+ 
+#### 资料
++ [《量化开源课程》](https://github.com/Ted88368/whale-quant.git) 本项目为量化开源课程，可以帮助人们快速掌握量化金融知识以及使用Python进行量化开发的能力。
++ 《基本面量化投资：运用财务分析和量化策略获取超额收益》
++ 《中低频量化交易策略研发》
+ 
+ 
+ ####  策略
+ ##### 基本面选股
+ 
+#### 参考项目
++ [startquant](https://github.com/Ted88368/startquant.git)  
++ [利用python对国内各大券商的金工研报进行复现](https://github.com/Ted88368/QuantsPlaybook) 依赖聚宽，但是知识点可以用
+#### 量化核心
++ 多因子选股
++ 择时
++ 投资组合

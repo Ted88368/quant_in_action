@@ -17,14 +17,17 @@ pip install -r requirements.txt
 + [《量化开源课程》](https://github.com/Ted88368/whale-quant.git) 本项目为量化开源课程，可以帮助人们快速掌握量化金融知识以及使用Python进行量化开发的能力。
 + 《基本面量化投资：运用财务分析和量化策略获取超额收益》
 + 《中低频量化交易策略研发》
- 
- 
++ [《Hands-On-Financial-Trading-with-Python》](https://github.com/Ted88368/Hands-On-Financial-Trading-with-Python)
+
  ####  策略
  ##### 基本面选股
  
 #### 参考项目
 + [startquant](https://github.com/Ted88368/startquant.git)  
 + [利用python对国内各大券商的金工研报进行复现](https://github.com/Ted88368/QuantsPlaybook) 依赖聚宽，但是知识点可以用
++ [pythondict-quant](https://github.com/Ted88368/pythondict-quant) 量化投资实战教程
+
+
 #### 量化核心
 + 多因子选股
 + 择时

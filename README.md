@@ -25,7 +25,7 @@ pip install -r requirements.txt
 #### 参考项目
 + [startquant](https://github.com/Ted88368/startquant.git)  
 + [利用python对国内各大券商的金工研报进行复现](https://github.com/Ted88368/QuantsPlaybook) 依赖聚宽，但是知识点可以用
-+ [pythondict-quant](https://github.com/Ted88368/pythondict-quant) 量化投资实战教程
++ [pythondict-quant](https://github.com/Ted88368/pythondict-quant) Quant Examples Based on Backtrader。
 
 
 #### 量化核心

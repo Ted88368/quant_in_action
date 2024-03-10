@@ -12,3 +12,4 @@
 + [plot_customizations](./plot_customizations.ipynb) 图形的自定义
 + [savefig](./savefig.ipynb) 图片存储
 + [styles](./styles.ipynb)  各种类型的K线图
++ [using_lines](./using_lines.ipynb) 水平线、垂直线，斜线

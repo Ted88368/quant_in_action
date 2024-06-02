@@ -11,7 +11,7 @@ pip install -r requirements.txt
 + 数据源
   + baostock
   + TuShare
- 
+  + [adata](https://github.com/1nchaos/adata)
  
 #### 资料
 + [《量化开源课程》](https://github.com/Ted88368/whale-quant.git) 本项目为量化开源课程，可以帮助人们快速掌握量化金融知识以及使用Python进行量化开发的能力。
@@ -32,3 +32,7 @@ pip install -r requirements.txt
 + 多因子选股
 + 择时
 + 投资组合
+
+
+#### 参考资料
++ [《主流股票数据源框架横向对比》](https://zhuanlan.zhihu.com/p/637409118)

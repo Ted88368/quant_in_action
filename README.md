@@ -9,7 +9,7 @@ pip install -r requirements.txt
 ```
 #### 工具库
 ##### 数据源
-+ baostock
++ [baostock](http://baostock.com/baostock) 
 + [TuShare](https://tushare.pro/) 积分制度比较麻烦
 + [adata](https://github.com/1nchaos/adata)
 + [efinance](https://github.com/Micro-sheep/efinance) 一个可以快速获取基金、股票、债券、期货数据的 Python 库

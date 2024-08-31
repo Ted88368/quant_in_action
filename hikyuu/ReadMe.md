@@ -1,0 +1,46 @@
+## 学习hikyuu
+
+
+### 直接安装
+#### Windows
+
+```shell
+# 安装路径
+#C:\Users\huzhe\.conda\envs\hikyuu
+
+conda config --add channels https://mirrors.aliyun.com/anaconda/pkgs/main/
+conda config --add channels https://mirrors.aliyun.com/anaconda/pkgs/free/
+
+
+# conda env remove --name hikyuu
+conda create --name hikyuu python=3.10.13
+
+# 安装好后，使用activate激活某个环境 
+# conda init powershell 解决activate无法使用的问题
+conda activate hikyuu 
+# conda activate hikyuu_dev 自己编译版本
+
+
+conda install pip
+# pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/ 
+pip install hikyuu==1.3.0
+# conda install hikyuu # 找不到的
+conda install jupyter_server jupyter notebook
+
+# 运行
+jupyter notebook
+```
+
+### 使用
+#### 数据导入
++ [下载数据](https://hikyuu.readthedocs.io/zh_CN/latest/quickstart.html#id2)
+    ```shell
+    # 由于 importdata 命令使用的是 HikyuuTDX 生成的配置文件，所以在第一次执行 importdata 之前需要至少运行过一次 HikyuuTDX。
+    配置好了关掉界面，用importdata
+    importdata 
+    ```
+
+
+
+### 参考资料
++ [《Hikyuu Quant Framework 1.0.3 文档》](https://hikyuu.readthedocs.io/zh_CN/latest/index.html)

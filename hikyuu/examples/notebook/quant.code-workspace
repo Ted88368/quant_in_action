@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../startquant"
+		},
+		{
+			"path": "../../../quant_in_action"
+		}
+	],
+	"settings": {}
+}

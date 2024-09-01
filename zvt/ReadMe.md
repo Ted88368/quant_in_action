@@ -4,13 +4,16 @@
 ```shell
 
 # 标准安装作为对比项
-conda create -n zvt python=3.8
+conda create -n zvt python=3.9
 conda activate zvt
 python -m pip install -U zvt==0.12.1
 
 # 或者源码编译
-conda create -n zvt_dev python=3.8
+conda create -n zvt_dev python=3.9
 conda activate zvt_dev
+
+pip install -r requirements.txt
+pip install numpy==1.23 xtquant nbformat
 python -m pip install -U .
 
 # 安装路径在 C:\Users\huzhe\.conda\envs\py38\Scripts

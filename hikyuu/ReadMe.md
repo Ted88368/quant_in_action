@@ -30,6 +30,8 @@ conda install jupyter_server jupyter notebook
 # 运行
 jupyter notebook
 ```
+#### Linux
++ [《编译安装》](./编译安装.md)
 
 ### 使用
 #### 数据导入
@@ -43,4 +45,4 @@ jupyter notebook
 
 
 ### 参考资料
-+ [《Hikyuu Quant Framework 1.0.3 文档》](https://hikyuu.readthedocs.io/zh_CN/latest/index.html)
++ [《Hikyuu Quant Framework 文档》](https://hikyuu.readthedocs.io/zh-cn/latest/index.html)

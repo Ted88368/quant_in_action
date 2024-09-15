@@ -23,7 +23,12 @@ conda activate hikyuu
 
 conda install pip
 # pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/ 
-pip install hikyuu==1.3.0
+
+# https://github.com/TA-Lib/ta-lib/releases/tag/v0.4.0
+pip install ..\TA_Lib-0.4.32-cp310-cp310-win_amd64.whl
+python -m pip install TA-Lib
+
+pip install hikyuu
 # conda install hikyuu # 找不到的
 conda install jupyter_server jupyter notebook
 
@@ -31,7 +36,7 @@ conda install jupyter_server jupyter notebook
 jupyter notebook
 ```
 #### Linux
-+ [《编译安装》](./编译安装.md)
++ [《编译安装》](./编译安装.md) WSL有问题
 
 ### 使用
 #### 数据导入
@@ -46,3 +51,4 @@ jupyter notebook
 
 ### 参考资料
 + [《Hikyuu Quant Framework 文档》](https://hikyuu.readthedocs.io/zh-cn/latest/index.html)
++ [《talib库windows下安装》](https://zhijinyu.com/post/247)

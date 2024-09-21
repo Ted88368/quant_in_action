@@ -40,6 +40,12 @@ jupyter notebook
 
 ### 使用
 #### 数据导入
++ 配置环境
+    ```shell
+    # 添加到windows的系统变量，解决中文乱码问题和配置无法加载问题
+    PYTHONIOENCODING=UTF8
+    PYTHONUTF8=1
+    ```
 + [下载数据](https://hikyuu.readthedocs.io/zh_CN/latest/quickstart.html#id2)
     ```shell
     # 由于 importdata 命令使用的是 HikyuuTDX 生成的配置文件，所以在第一次执行 importdata 之前需要至少运行过一次 HikyuuTDX。

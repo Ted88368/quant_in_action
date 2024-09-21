@@ -43,9 +43,15 @@ jupyter notebook
 + [下载数据](https://hikyuu.readthedocs.io/zh_CN/latest/quickstart.html#id2)
     ```shell
     # 由于 importdata 命令使用的是 HikyuuTDX 生成的配置文件，所以在第一次执行 importdata 之前需要至少运行过一次 HikyuuTDX。
+    # 路径 ~\.hikyuu
+
+
     配置好了关掉界面，用importdata
     importdata 
     ```
+
+#### 例子选择
+https://nbviewer.org/github/fasiondog/hikyuu/blob/master/hikyuu/examples/notebook/000-Index.ipynb?flush_cache=True
 
 
 

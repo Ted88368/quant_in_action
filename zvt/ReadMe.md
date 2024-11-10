@@ -1,5 +1,11 @@
 ## ZVT快速入门
 
+
+#### 系统
++ Windows成功
++ Linux未测试
++ MacOS未测试
+
 #### 安装
 ```shell
 
@@ -40,6 +46,15 @@ zvt
 # C:\Users\huzhe\.conda\envs\py38\Scripts\zvt.exe
 
 zvt/src/zvt/main.py
+```
+
+#### WebUI
+```shell
+pip install PyYAML
+pip install uvicorn
+zvt_server
+
+https://github.com/Ted88368/zvt_ui.git
 ```
 
 ### 数据说明

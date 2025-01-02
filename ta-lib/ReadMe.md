@@ -6,6 +6,7 @@
 ```shell    
 # 安装TA-Lib
 brew install ta-lib
+pip install TA-Lib
 ```
 
 #### 参考资料

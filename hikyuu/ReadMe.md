@@ -13,7 +13,7 @@ conda config --add channels https://mirrors.aliyun.com/anaconda/pkgs/free/
 
 
 # conda env remove --name hikyuu
-conda create --name hikyuu python=3.10.13
+conda create --name hikyuu python=3.10
 
 # 安装好后，使用activate激活某个环境 
 # conda init powershell 解决activate无法使用的问题

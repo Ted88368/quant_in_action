@@ -8,6 +8,17 @@
 brew install ta-lib
 pip install TA-Lib
 ```
+#### Linux
+Download [ta-lib-0.6.4-src.tar.gz](https://github.com/ta-lib/ta-lib/releases/tag/v0.6.4) and:
+```
+untar and cd
+./configure --prefix=/usr
+make
+sudo make install
+
+python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple ta-lib
+```
+
 
 #### 文档
 + [《talib-document》](https://github.com/Ted88368/talib-document)

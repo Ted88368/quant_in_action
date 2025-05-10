@@ -5,7 +5,7 @@
 ##### OSX
 ```shell    
 # 安装TA-Lib
-brew install ta-lib
+arch -arm64 brew install  ta-lib
 pip install TA-Lib
 ```
 #### Linux

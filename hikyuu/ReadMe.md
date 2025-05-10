@@ -63,8 +63,7 @@ jupyter notebook
 https://nbviewer.org/github/fasiondog/hikyuu/blob/master/hikyuu/examples/notebook/000-Index.ipynb?flush_cache=True
 
 
-##### 量化交易策略部件
-+ [《hikyuu插件》](https://mp.weixin.qq.com/s/4oh9DEEUkv1gk4KoCcGhtQ)
+
 
 ### 参考资料
 + [《Hikyuu Quant Framework 文档》](https://hikyuu.readthedocs.io/zh-cn/latest/index.html)

@@ -3,8 +3,19 @@
 ### quant_in_action
 #### 运行
 ```shell
-conda create -n py39 python=3.9
-conda activate py39
+pip install virtualenv
+virtualenv --version
+
+# 创建虚拟环境
+# 默认使用当前目录
+virtualenv venv --python=python3.10
+
+
+# 激活 venv
+# OSX/Linux
+source venv/bin/activate
+# Windows
+venv\Scripts\activate
 
 pip freeze > requirements.txt
 pip install -r requirements.txt

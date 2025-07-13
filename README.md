@@ -8,12 +8,12 @@ virtualenv --version
 
 # 创建虚拟环境
 # 默认使用当前目录
-virtualenv venv --python=python3.10
+virtualenv .venv --python=python3.10
 
 
 # 激活 venv
 # OSX/Linux
-source venv/bin/activate
+source .venv/bin/activate
 # Windows
 venv\Scripts\activate
 

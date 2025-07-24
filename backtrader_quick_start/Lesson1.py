@@ -6,13 +6,14 @@ import backtrader as bt
 import pandas as pd
 import datetime
 
-# 回测策略
+# 回测策略 
 class TestStrategy(bt.Strategy):
     '''选股策略'''
     params = (('maperiod', 15),
               ('printlog', False),)
 
     def __init__(self):
+        '''必选，初始化属性、计算指标等'''
         self.buy_stock = trade_info  # 保留调仓列表
         # 读取调仓日期，即每月的最后一个交易日，回测时，会在这一天下单，然后在下一个交易日，以开盘价买入
         self.trade_dates = pd.to_datetime(self.buy_stock['trade_date'].unique()).tolist()
@@ -20,6 +21,7 @@ class TestStrategy(bt.Strategy):
         self.buy_stocks_pre = []  # 记录上一期持仓
 
     def next(self):
+        '''必选，编写交易策略逻辑'''
         dt = self.datas[0].datetime.date(0)  # 获取当前的回测时间点
         # 如果是调仓日，则进行调仓操作
         if dt in self.trade_dates:
@@ -56,11 +58,13 @@ class TestStrategy(bt.Strategy):
         # 交易记录日志（可省略，默认不输出结果）
 
     def log(self, txt, dt=None, doprint=False):
+        '''可选，构建策略打印日志的函数：可用于打印订单记录或交易记录等'''
         if self.params.printlog or doprint:
             dt = dt or self.datas[0].datetime.date(0)
             print(f'{dt.isoformat()},{txt}')
 
     def notify_order(self, order):
+        '''可选，打印订单信息'''
         # 未被处理的订单
         if order.status in [order.Submitted, order.Accepted]:
             return
@@ -84,7 +88,9 @@ class TestStrategy(bt.Strategy):
                           order.executed.size,
                           order.data._name))
 
-
+    def notify_trade(self, trade):
+        '''可选，打印交易信息'''
+        pass
 
 
 
@@ -147,3 +153,4 @@ if __name__ == '__main__':
     print(strat.analyzers._SharpeRatio.get_analysis())
     print("--------------- DrawDown -----------------")
     print(strat.analyzers._DrawDown.get_analysis())
+# %%

@@ -3,19 +3,8 @@
 ### quant_in_action
 #### 运行
 ```shell
-pip install virtualenv
-virtualenv --version
-
-# 创建虚拟环境
-# 默认使用当前目录
-virtualenv .venv --python=python3.10
-
-
-# 激活 venv
-# OSX/Linux
-source .venv/bin/activate
-# Windows
-venv\Scripts\activate
+pyenv virtualenv 3.10 py310
+pyenv activate py310
 
 pip freeze > requirements.txt
 pip install -r requirements.txt

@@ -1,6 +1,5 @@
 # Backtrader 中文教程
-* 作者：[量化投资与机器学习](https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzAxNTc0Mjg0Mg==&scene=124#wechat_redirect)
-* 笔记：Jason
+
 
 ## [Lesson1：Backtrader来啦](https://mp.weixin.qq.com/s/7S4AnbUfQy2kCZhuFN1dZw)
 Backtrader 是 2015 年开源的 Python 量化回测框架（支持实盘交易），功能丰富，操作方便灵活：

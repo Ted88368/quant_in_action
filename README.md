@@ -3,8 +3,8 @@
 ### quant_in_action
 #### 运行
 ```shell
-pyenv virtualenv 3.10 py310
-pyenv activate py310
+pyenv virtualenv 3.12 py312
+pyenv activate py312
 
 pip freeze > requirements.txt
 pip install -r requirements.txt

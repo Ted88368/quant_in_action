@@ -18,12 +18,71 @@ class FearGreedIndex:
     def get_market_data(self):
         """获取基础市场数据"""
         try:
-            # 获取沪深300指数数据
-            df_hs300 = ak.stock_zh_index_hist_csindex(symbol="H30374", 
-                                                     start_date=self.start_date, 
+            # 获取沪深300指数数据（兼容不同返回格式）
+            df_hs300 = ak.stock_zh_index_hist_csindex(symbol="H30374",
+                                                     start_date=self.start_date,
                                                      end_date=self.end_date)
-            df_hs300['日期'] = pd.to_datetime(df_hs300['日期'])
-            df_hs300 = df_hs300.set_index('日期')
+
+            # 规范化日期列/索引
+            if '日期' in df_hs300.columns:
+                try:
+                    df_hs300['日期'] = pd.to_datetime(df_hs300['日期'])
+                    df_hs300 = df_hs300.set_index('日期')
+                except Exception:
+                    # 如果按列转换失败，尝试按能解析的索引处理
+                    try:
+                        df_hs300.index = pd.to_datetime(df_hs300.index)
+                    except Exception:
+                        pass
+            else:
+                # 如果没有 `日期` 列，尝试将索引转为 datetime 或查找可能的日期列名
+                date_candidates = [c for c in df_hs300.columns if 'date' in str(c).lower() or '时间' in str(c) or '时间' in str(c)]
+                if date_candidates:
+                    c = date_candidates[0]
+                    try:
+                        df_hs300[c] = pd.to_datetime(df_hs300[c])
+                        df_hs300 = df_hs300.set_index(c)
+                    except Exception:
+                        try:
+                            df_hs300.index = pd.to_datetime(df_hs300.index)
+                        except Exception:
+                            pass
+                else:
+                    try:
+                        df_hs300.index = pd.to_datetime(df_hs300.index)
+                    except Exception:
+                        pass
+
+            # 规范化列名：寻找收盘和涨跌幅列的候选名称
+            close_candidates = ['收盘', 'close', '收盘价', 'close_price']
+            pct_candidates = ['涨跌幅', 'pct_chg', '涨幅', 'change_pct']
+
+            def find_col(df, candidates):
+                for cand in candidates:
+                    for col in df.columns:
+                        if cand.lower() == str(col).lower() or cand in str(col):
+                            return col
+                # 模糊匹配：列名包含关键字
+                for col in df.columns:
+                    name = str(col).lower()
+                    for cand in candidates:
+                        if any(k in name for k in [cand.lower() if isinstance(cand, str) else cand]):
+                            return col
+                return None
+
+            close_col = find_col(df_hs300, close_candidates)
+            pct_col = find_col(df_hs300, pct_candidates)
+
+            if close_col is None or pct_col is None:
+                # 输出调试信息并尝试使用前几列作为替代
+                print('警告：未能找到标准的收盘/涨跌幅列，当前列为:', list(df_hs300.columns))
+                if len(df_hs300.columns) >= 2:
+                    close_col = df_hs300.columns[0]
+                    pct_col = df_hs300.columns[1]
+                else:
+                    raise ValueError('df_hs300 列数不足以提取收盘和涨跌幅')
+
+            df_hs300 = df_hs300.rename(columns={close_col: '收盘', pct_col: '涨跌幅'})
             
             # 获取北向资金数据（兼容不同版本的 akshare 接口名称）
             df_north = None

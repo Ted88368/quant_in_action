@@ -1,9 +1,11 @@
 
 
+import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import akshare as ak
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings('ignore')
@@ -18,10 +20,52 @@ class FearGreedIndex:
     def get_market_data(self):
         """获取基础市场数据"""
         try:
+            # 本地缓存目录（每日更新）
+            cache_dir = Path('/tmp')
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            today_str = date.today().strftime('%Y%m%d')
+
+            def _get_cached_df(cache_key: str, loader_callable):
+                """从 /tmp 缓存读取或调用 loader_callable 下载并保存。
+
+                cache_key 应该是无空格、无特殊字符的短字符串，用于文件名。
+                loader_callable 应返回 pandas.DataFrame 或类似对象。
+                """
+                safe_name = ''.join(c if c.isalnum() or c in ('_', '-') else '_' for c in cache_key)
+                fname = cache_dir / f"akshare_{safe_name}_{self.start_date}_{self.end_date}_{today_str}.csv"
+                if fname.exists():
+                    try:
+                        df = pd.read_csv(fname, index_col=0, parse_dates=True)
+                        print(f'使用缓存: {fname}')
+                        return df
+                    except Exception as e:
+                        print(f'读取缓存失败，重新下载: {e}')
+                # 否则调用 loader
+                try:
+                    df = loader_callable()
+                except Exception as e:
+                    print(f'调用数据源失败: {e}')
+                    return None
+
+                # 只有在返回 DataFrame 时才保存
+                try:
+                    if hasattr(df, 'to_csv'):
+                        # 保存索引
+                        df.to_csv(fname, index=True)
+                        print(f'已缓存到: {fname}')
+                except Exception as e:
+                    print(f'保存缓存失败: {e}')
+                return df
+
             # 获取沪深300指数数据（兼容不同返回格式）
-            df_hs300 = ak.stock_zh_index_hist_csindex(symbol="H30374",
-                                                     start_date=self.start_date,
-                                                     end_date=self.end_date)
+            symbol = "H30374"
+            df_hs300 = _get_cached_df(f"stock_zh_index_hist_csindex_{symbol}",
+                                     lambda: ak.stock_zh_index_hist_csindex(symbol=symbol,
+                                                                          start_date=self.start_date,
+                                                                          end_date=self.end_date))
+
+            if df_hs300 is None:
+                raise RuntimeError('无法获取或加载 hs300 指数数据')
 
             # 规范化日期列/索引
             if '日期' in df_hs300.columns:
@@ -94,12 +138,24 @@ class FearGreedIndex:
                 'stock_hsgt_money_flow_hsgt',
             ]
             for func_name in candidate_funcs:
+                cache_key = f"{func_name}"
+                # 如果 ak 中存在该函数，尝试从缓存读取或调用
                 if hasattr(ak, func_name):
-                    try:
-                        df_north = getattr(ak, func_name)()
+                    df_north = _get_cached_df(cache_key, lambda func=func_name: getattr(ak, func)())
+                    if df_north is not None:
                         break
-                    except Exception:
-                        df_north = None
+
+                # 若 ak 中没有该函数，也尝试从缓存读取（可能之前通过其它机器/脚本生成）
+                if df_north is None:
+                    # 尝试读取本地缓存（无需函数存在）
+                    possible = cache_dir / f"akshare_{func_name}_{self.start_date}_{self.end_date}_{today_str}.csv"
+                    if possible.exists():
+                        try:
+                            df_north = pd.read_csv(possible, index_col=0, parse_dates=True)
+                            print(f'使用已有缓存: {possible}')
+                            break
+                        except Exception:
+                            df_north = None
 
             if df_north is None:
                 print('警告：未能通过 akshare 获取北向资金数据，使用空占位（列名: 今日净流入）')
@@ -126,8 +182,8 @@ class FearGreedIndex:
                 else:
                     df_north = df_north.rename(columns={netcol: '今日净流入'})
             
-            # 获取市场广度数据（上涨下跌家数）
-            df_breadth = ak.stock_sse_summary()
+            # 获取市场广度数据（上涨下跌家数），使用缓存
+            df_breadth = _get_cached_df('stock_sse_summary', lambda: ak.stock_sse_summary())
             # 这里需要根据实际情况处理数据格式
             
             self.df_index = df_hs300[['收盘', '涨跌幅']].copy()

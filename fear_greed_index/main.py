@@ -5,8 +5,9 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import akshare as ak
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, time
 import matplotlib.pyplot as plt
+import traceback
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -45,6 +46,7 @@ class FearGreedIndex:
                     df = loader_callable()
                 except Exception as e:
                     print(f'调用数据源失败: {e}')
+                    traceback.print_exc()
                     return None
 
                 # 只有在返回 DataFrame 时才保存
@@ -128,34 +130,17 @@ class FearGreedIndex:
 
             df_hs300 = df_hs300.rename(columns={close_col: '收盘', pct_col: '涨跌幅'})
             
-            # 获取北向资金数据（兼容不同版本的 akshare 接口名称）
-            df_north = None
-            candidate_funcs = [
-                'stock_hsgt_north_net_flow_in_em',
-                'stock_hsgt_north_net_flow_in',
-                'stock_hsgt_north_money_flow',
-                'stock_hsgt_north_net_inflow',
-                'stock_hsgt_money_flow_hsgt',
-            ]
-            for func_name in candidate_funcs:
-                cache_key = f"{func_name}"
-                # 如果 ak 中存在该函数，尝试从缓存读取或调用
-                if hasattr(ak, func_name):
-                    df_north = _get_cached_df(cache_key, lambda func=func_name: getattr(ak, func)())
-                    if df_north is not None:
-                        break
-
-                # 若 ak 中没有该函数，也尝试从缓存读取（可能之前通过其它机器/脚本生成）
-                if df_north is None:
-                    # 尝试读取本地缓存（无需函数存在）
-                    possible = cache_dir / f"akshare_{func_name}_{self.start_date}_{self.end_date}_{today_str}.csv"
-                    if possible.exists():
-                        try:
-                            df_north = pd.read_csv(possible, index_col=0, parse_dates=True)
-                            print(f'使用已有缓存: {possible}')
-                            break
-                        except Exception:
-                            df_north = None
+            # 获取北向资金数据：使用指定的接口 `stock_hsgt_fund_min_em` 并缓存
+            df_north = _get_cached_df('stock_hsgt_fund_min_em', lambda: ak.stock_hsgt_fund_min_em())
+            # 如果没有拿到，尝试读取可能已有的缓存文件（容错）
+            if df_north is None:
+                possible = cache_dir / f"akshare_stock_hsgt_fund_min_em_{self.start_date}_{self.end_date}_{today_str}.csv"
+                if possible.exists():
+                    try:
+                        df_north = pd.read_csv(possible, index_col=0, parse_dates=True)
+                        print(f'使用已有缓存: {possible}')
+                    except Exception:
+                        df_north = None
 
             if df_north is None:
                 print('警告：未能通过 akshare 获取北向资金数据，使用空占位（列名: 今日净流入）')
@@ -167,6 +152,31 @@ class FearGreedIndex:
                 if '日期' in df_north.columns:
                     df_north['日期'] = pd.to_datetime(df_north['日期'])
                     df_north = df_north.set_index('日期')
+
+                # 处理重复的时间索引（某些接口会返回重复的分钟/秒级数据）
+                try:
+                    if df_north.index.duplicated().any():
+                        print('注意：北向资金数据索引存在重复时间，已按时间保留最后一条记录以去重')
+                        df_north = df_north[~df_north.index.duplicated(keep='last')]
+                except Exception:
+                    pass
+
+                # 如果索引只有日期（00:00:00），而时间信息保存在 `时间` 列（例如 '15:00'），
+                # 则把日期和时间列合并为精确的 DatetimeIndex
+                try:
+                    idx_times = df_north.index.to_series().dt.time
+                    # 判断是否所有时间都是午夜（没有时间部分）
+                    if all(t == time(0, 0) for t in idx_times) and '时间' in df_north.columns:
+                        print('检测到索引为日期且存在 `时间` 列，正在合并为带时分的索引')
+                        # 解析 `时间` 列，例如 '15:00' -> hours/minutes
+                        times_parsed = pd.to_datetime(df_north['时间'].astype(str), format='%H:%M', errors='coerce')
+                        hours = times_parsed.dt.hour.fillna(0).astype(int)
+                        minutes = times_parsed.dt.minute.fillna(0).astype(int)
+                        new_index = [pd.Timestamp(d.date()) + timedelta(hours=h, minutes=m)
+                                     for d, h, m in zip(df_north.index, hours, minutes)]
+                        df_north.index = pd.DatetimeIndex(new_index)
+                except Exception:
+                    pass
 
                 # 找到可能表示净流入/资金流向的列并重命名
                 netcol = None
@@ -186,12 +196,48 @@ class FearGreedIndex:
             df_breadth = _get_cached_df('stock_sse_summary', lambda: ak.stock_sse_summary())
             # 这里需要根据实际情况处理数据格式
             
+            # 将 df_hs300 提取为基础 df_index
             self.df_index = df_hs300[['收盘', '涨跌幅']].copy()
             self.df_index = self.df_index.rename(columns={'收盘': 'hs300_close', 
                                                          '涨跌幅': 'hs300_pct_chg'})
-            
-            # 合并北向资金数据
-            self.df_index = self.df_index.join(df_north[['今日净流入']], how='left')
+
+            # 从分钟级/带时分索引的 df_north 提取每日 15:00 的北向资金值，并与 hs300 日期对齐
+            try:
+                if '今日净流入' in df_north.columns:
+                    s = df_north['今日净流入']
+                    if not s.empty:
+                        # 选择时间为 15:00 的记录
+                        from datetime import time as _time
+                        try:
+                            s15 = s[s.index.time == _time(15, 0)]
+                        except Exception:
+                            # 如果 index.time 不可用，尝试按字符串匹配 `时间` 列
+                            s15 = pd.Series(dtype=float)
+                        if not s15.empty:
+                            # 用日期作为索引，若有多条取最后一条
+                            s15.index = s15.index.normalize()
+                            s15 = s15.groupby(s15.index).last()
+                            # 将 s15 映射到 hs300 的完整索引（按日期对齐）
+                            hs_dates = df_hs300.index.normalize()
+                            mapped = [s15.get(d, np.nan) for d in hs_dates]
+                            df_north_daily = pd.DataFrame({'今日净流入': mapped}, index=df_hs300.index)
+                        else:
+                            # 无 15:00 记录，使用 NaN 占位
+                            df_north_daily = pd.DataFrame(index=df_hs300.index)
+                            df_north_daily['今日净流入'] = np.nan
+                    else:
+                        df_north_daily = pd.DataFrame(index=df_hs300.index)
+                        df_north_daily['今日净流入'] = np.nan
+                else:
+                    df_north_daily = pd.DataFrame(index=df_hs300.index)
+                    df_north_daily['今日净流入'] = np.nan
+            except Exception as e:
+                print('处理北向资金按日15:00失败:', e)
+                df_north_daily = pd.DataFrame(index=df_hs300.index)
+                df_north_daily['今日净流入'] = np.nan
+
+            # 合并北向资金（按每日 15:00）
+            self.df_index = self.df_index.join(df_north_daily[['今日净流入']], how='left')
             
             return True
             

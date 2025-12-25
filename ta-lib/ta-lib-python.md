@@ -165,3 +165,4 @@ CDLUNIQUE3RIVER      Unique 3 River（独特三河）
 CDLUPSIDEGAP2CROWS   Upside Gap Two Crows（向上跳空两乌鸦）
 CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods（向上/向下跳空三法）
 ```
+  

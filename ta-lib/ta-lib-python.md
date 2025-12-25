@@ -169,8 +169,8 @@ CDLXSIDEGAP3METHODS  Upside/Downside Gap Three Methods（向上/向下跳空三�
 
 ## Pattern Details 🕯️
 Detailed descriptions of candlestick patterns by category.
-+ docs/Bullish 看跌
-+ docs/Bearish 看涨
++ docs/Bullish 看涨
++ docs/Bearish 看跌
 + docs/Mixed 混合
 + docs/Neutral 中性
 + docs/Other 其他

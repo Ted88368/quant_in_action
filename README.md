@@ -3,11 +3,20 @@
 ### quant_in_action
 #### 运行
 ```shell
-pyenv virtualenv 3.12 py312
-pyenv activate py312
+# 使用 uv 创建虚拟环境（Python 3.12）
+uv venv
 
-pip freeze > requirements.txt
-pip install -r requirements.txt
+# 激活虚拟环境
+# macOS/Linux:
+source .venv/bin/activate
+# Windows:
+# .venv\Scripts\activate
+
+# 安装依赖
+uv pip install -r requirements.txt
+
+# 或者如果有 pyproject.toml，可以直接使用：
+# uv sync
 ```
 #### 工具库
 ##### 数据源

@@ -362,7 +362,7 @@ class FearGreedIndex:
 
 
 # 初始化并运行
-fgi = FearGreedIndex(start_date='20250101')
+fgi = FearGreedIndex(start_date='20251001')
 
 # 获取数据
 if fgi.get_market_data():
